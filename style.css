@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#header {
+    height: 60px;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #5c472c;
+    width: 100%;
+}
+.menu-icon-wrapper {
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    cursor: pointer;
+}
+.menu-icon-wrapper-active .menu-icon::before,
+.menu-icon-wrapper-active .menu-icon::after,
+.menu-icon-wrapper-active .menu-icon {
+    background-color: #faac2f;
+}
+.menu-icon {
+    display: inline-block;
+    height: 2px;
+    width: 20px;
+    background-color: #fff;
+    position: relative;
+}
+
+.menu-icon::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: 0;
+    height: 2px;
+    width: 20px;
+    background-color: #fff;
+}
+
+.menu-icon::after {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 0;
+    height: 2px;
+    width: 20px;
+    background-color: #fff;
+}
+.menu {
+    transition: 500ms;
+    width: 200px;
+    position: absolute;
+    bottom: 0;
+    top: 60px;
+    background-color: #5c472c;
+    z-index: 9999;
+}
+.menu-show {
+    left: 0;
+}
+.menu-hide {
+    left: -200px;
+}
+.menu ul {
+    list-style-type: none;
+}
+.menu ul li {
+    color: #fff;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+    transition: ease 200ms;
+}
+.menu ul li:hover {
+    background-color: #faac2f;
+    transition: ease 200ms;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-footer .btn-orange {
+    background-color: #faac2f;
+    color: white;
+}
+
+.row {
+    margin: 10px 0px;
+}
+#title.row {
+    text-align: center;
+    margin-bottom: 15px;
+}
+#title.row  h1 {
+    font-size: 24px;
+    line-height: 24px;
+
+}
+.row .left {
+    float: left;
+    width: 105px;
+    text-align: center;
+}
+.row .right {
+    float: right;
+    width: 319px;
+
+}
+.row .right input {
+    width: 319px;
+    height: 35px;
+    padding: 0px 5px;
+    box-sizing: border-box;
+}
+.row .left label {
+    line-height: 35px;
+}
+
+.dnone {
+    display: none;
+}
+
+.dblock {
+    display: block;
+}
