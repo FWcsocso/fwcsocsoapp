@@ -8,11 +8,14 @@ new Vue({
     el:"#app",
     data () {
        return {
-           error:null,
-           loading: false,
+           loginError: false,
+           loading: true,
            loggedin:false,
            username: null,
            password: null,
+           newPlayerName:null,
+           waitForNewPlayer: false,
+           playerError: false,
            token: null,
            id: null,
            name: null,
@@ -23,10 +26,15 @@ new Vue({
        }
     },
     created () {
+        this.loading=false;
+
         let token=window.localStorage.getItem("userToken");
         let tokenExpiration=window.localStorage.getItem("userTokenExpiration");
 
-        console.log(this.loggedin);
+        if (token!="") {
+            this.loggedin=true;
+            this.token=token;
+        }
     },
     methods: {
         /*kijelentkezés*/
@@ -55,12 +63,16 @@ new Vue({
                     this.loggedin=true;
                 })
                 .catch(error => {
-                    this.error = true
-                })
-                .finally(() => this.loading = false)
+                    this.loginError=true;
+                });
+
         },
         /*játékosok lekérése */
         loadAll(){
+            $(".menu").removeClass("menu-show");
+            $(".menu-icon-wrapper").removeClass("menu-icon-wrapper-active");
+            $(".menu").addClass("menu-hide");
+
             let headers = {"Authorization":  "Bearer " + this.token};
             this.$http
                 .get('players',{headers:headers})
@@ -69,10 +81,46 @@ new Vue({
                     /*a visszakapott JSON objektum ami egy tömb*/
                     /*view-ba v-for-ral feldolgozni*/
                     this.players=response.data;
+                    console.log(this.players);
                     this.playersShow=true;
                     this.playersHide=false;
                 });
 
+        },
+        newPlayer() {
+            let headers = {"Authorization":  "Bearer " + this.token, "ContentType": "application/json"};
+            let data = {"name": this.newPlayerName};
+
+            if (this.newPlayerName==null) {
+                this.playerError=true;
+            } else {
+                this.waitForNewPlayer=true;
+
+                this.$http
+                    .post('players',data,{headers:headers})
+                    .then(response => {
+                        //új játékos berakása
+                        //a players tömbbe
+                        this.players.push(response.data);
+                        this.waitForNewPlayer=false;
+                        this.newPlayer="";
+                    })
+                    .catch(error => {
+                        this.waitForNewPlayer=false;
+                    });
+            }
+        },
+        deletePlayer (playerID) {
+            let headers = {"Authorization":  "Bearer " + this.token};
+
+            this.$http
+                .delete("players/".playerID,{headers:headers})
+                .then(response => {
+                    this.loadAll();
+                });
+        },
+        hidePlayerAlert() {
+            this.playerError=false;
         }
     }
 });
