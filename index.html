@@ -12,10 +12,11 @@
 </head>
 <body>
 <div id="app">
+    <!-- dx7D8n7xWo -->
     <div id="loading" v-show="loading">
         <i class="fa fa-spinner fa-spin"></i>
     </div>
-    <div id="app-inner">
+    <div id="app-inner">    
         <div id="header">
             <div class="menu-icon-wrapper">
                 <span class="menu-icon"></span>
@@ -25,9 +26,9 @@
             <ul>
                 <li v-if="loggedin" id="logout" @click="logout();">Kijelentkezés</li>
                 <li v-else onclick="$('#login-modal').modal();" id="login">Bejelentkezés</li>
-                <li>Jelenlegi mérkőzés</li>
-                <li>Mérkőzések</li>
-                <li @click="loadAll();">Játékosok</li>
+                <li v-show="loggedin">Jelenlegi mérkőzés</li>
+                <li v-show="loggedin">Mérkőzések</li>
+                <li v-show="loggedin" @click="loadAll();">Játékosok</li>
                 <li>Új mérkőzés</li>
             </ul>
         </div>
@@ -70,38 +71,41 @@
 
                     <!-- footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-orange" @click="login()">Bejelentkezés</button>
+                        <button type="button" class="btn btn-orange" v-on:click="login">Bejelentkezés</button>
                     </div>
                 </div>
             </div>
         </div>
-        <!--players -->
+        <!--players -->        
         <div class="table-responsive players col-md-6 margin-auto" v-bind:class="{ dblock: playersShow, dnone: playersHide}" id="players">
             <table class='table'>
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Név</th>
+                    <th colspan="2">Név</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="player in players">
+                <tr v-for="player in players" class="player-row">
                     <td>{{player.id}}</td>
-                    <td>{{player.name}}</td>
+                    <td><input type="text" v-model="modifiedPlayerName" v-if="player.edit"><span v-else>{{player.name}}</span></td>
                     <td>
-                        <button class="delete-button" @click="deletePlayer(9);">
+                        <button class="delete-button" @click="deletePlayer(player.id);">
                             <i class="fa fa-times"></i>
-                        </button>
-                        <button class="modify-button" @click="modifyPlayer();">
+                        </button>                    
+                        <button v-show="!player.edit" class="modify-button" @click="modifyPlayer(player.id)">
                             <i class="fa fa-edit"></i>
+                        </button>
+                        <button v-show="player.edit" class="save-button" @click="savePlayer(player.id)">
+                            <i class="fa fa-save"></i>
                         </button>
                     </td>
                 </tr>
                 </tbody>
             </table>
             <div id="addNewPlayer">
-                <input type="text" v-model="newPlayerName" v-on:change="hidePlayerAlert()">
-                <button id="addNewPlayerButton" @click="newPlayer()">
+                <input type="text" v-model="newPlayerName" v-on:change="hidePlayerAlert();">
+                <button class="button" id="addNewPlayerButton" @click="newPlayer();">
                     <i class="fa fa-plus"></i>
                     Hozzáad
                 </button>
