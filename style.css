@@ -136,7 +136,7 @@
     margin: 0 auto;
 }
 
-#addNewPlayerButton {
+.button {
     padding: 5px 10px;
     margin-left: 10px;
     background: #5c472c;
@@ -145,7 +145,7 @@
     border: none;
 }
 
-#addNewPlayerButton:hover {
+.button:hover {
     background-color: #faac2f;
     transition: all ease 500ms;
 }
@@ -155,7 +155,8 @@
     margin-right: 10px;
 }
 
-.modify-button {
+.modify-button, 
+.save-button {
     color: green;
 }
 
@@ -164,7 +165,8 @@
 }
 
 .delete-button,
-.modify-button{
+.modify-button,
+.save-button {
     background-color: transparent;
     border: none;
     font-size: 18px;
