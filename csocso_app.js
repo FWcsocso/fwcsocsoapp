@@ -8,12 +8,14 @@ new Vue({
     el:"#app",
     data () {
        return {
+           showLoginModal: false,
            loginError: false,
            loading: true,
            loggedin:false,
            username: null,
            password: null,
            newPlayerName:null,
+           modifiedPlayerName:null,
            waitForNewPlayer: false,
            playerError: false,
            token: null,
@@ -21,19 +23,20 @@ new Vue({
            name: null,
            data: null,
            playersShow: false,
-           playersHide: true,
+           playersHide: true,           
            players: []
        }
     },
-    created () {
+    created () {        
         this.loading=false;
 
         let token=window.localStorage.getItem("userToken");
         let tokenExpiration=window.localStorage.getItem("userTokenExpiration");
 
-        if (token!="") {
+        if (token!=null) {
             this.loggedin=true;
             this.token=token;
+            console.log(this.token);
         }
     },
     methods: {
@@ -41,6 +44,7 @@ new Vue({
         logout () {
             window.localStorage.removeItem("userToken");
             window.localStorage.removeItem("userTokenExpiration");
+
             this.token=null;
             this.loggedin=false;
             this.players=null;
@@ -60,7 +64,7 @@ new Vue({
 
                     let token=window.localStorage.getItem("userToken");
                     this.token=token;
-                    this.loggedin=true;
+                    this.loggedin=true;        
                 })
                 .catch(error => {
                     this.loginError=true;
@@ -68,22 +72,24 @@ new Vue({
 
         },
         /*játékosok lekérése */
-        loadAll(){
+        loadAll(){        
             $(".menu").removeClass("menu-show");
             $(".menu-icon-wrapper").removeClass("menu-icon-wrapper-active");
             $(".menu").addClass("menu-hide");
 
-            let headers = {"Authorization":  "Bearer " + this.token};
+            let headers = {"Authorization":  "Bearer " + this.token};    
             this.$http
                 .get('players',{headers:headers})
-                .then(response => {
+                .then(response => {                    
                     /*response*/
                     /*a visszakapott JSON objektum ami egy tömb*/
                     /*view-ba v-for-ral feldolgozni*/
-                    this.players=response.data;
-                    console.log(this.players);
+                    response.data.forEach(function (player) {                        
+                        Vue.set(player,"edit",false);                        
+                    });
+                    this.players=response.data;                
                     this.playersShow=true;
-                    this.playersHide=false;
+                    this.playersHide=false;            
                 });
 
         },
@@ -103,20 +109,53 @@ new Vue({
                         //a players tömbbe
                         this.players.push(response.data);
                         this.waitForNewPlayer=false;
-                        this.newPlayer="";
+                        this.newPlayerName="";
                     })
                     .catch(error => {
                         this.waitForNewPlayer=false;
                     });
             }
         },
-        deletePlayer (playerID) {
+        deletePlayer (playerID) {        
             let headers = {"Authorization":  "Bearer " + this.token};
-
+            let deleteUrl = "players/"+playerID;
             this.$http
-                .delete("players/".playerID,{headers:headers})
+                .delete(deleteUrl,{headers:headers})
                 .then(response => {
                     this.loadAll();
+                });
+        },
+        modifyPlayer (playerID) {
+            let tempName=null;
+
+            this.players.find(function (element){
+                if (element.id==playerID) {
+                    element.edit=true;                    
+                    tempName=element.name;                                        
+                } else {
+                    element.edit=false;
+                }
+            });
+
+            this.modifiedPlayerName=tempName;
+        }, 
+        savePlayer (playerID) {
+            this.players.find(function (element){
+                if (element.id==playerID) {
+                    element.edit=false;
+                }
+            });
+
+            let modifyUrl="players/"+playerID;
+
+            let headers = {"Authorization":  "Bearer " + this.token, "ContentType": "application/json"};
+            let data = {"name": this.modifiedPlayerName};        
+
+            this.$http
+                .put(modifyUrl,data,{headers:headers})
+                .then(response => {
+                    this.loadAll();
+                    this.modifiedPlayerName=null;
                 });
         },
         hidePlayerAlert() {
