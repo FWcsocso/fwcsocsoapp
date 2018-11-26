@@ -26,8 +26,8 @@
             <ul>
                 <li v-if="loggedin" id="logout" @click="logout();">Kijelentkezés</li>
                 <li v-else onclick="$('#login-modal').modal();" id="login">Bejelentkezés</li>
-                <li v-show="loggedin">Jelenlegi mérkőzés</li>
-                <li v-show="loggedin">Mérkőzések</li>
+                <li v-show="loggedin" @click="currentGame();">Jelenlegi mérkőzés</li>
+                <li v-show="loggedin" @click="loadGames();">Mérkőzések</li>
                 <li v-show="loggedin" @click="loadAll();">Játékosok</li>
                 <li>Új mérkőzés</li>
             </ul>
@@ -76,6 +76,7 @@
                 </div>
             </div>
         </div>
+
         <!--players -->        
         <div class="table-responsive players col-md-6 margin-auto" v-bind:class="{ dblock: playersShow, dnone: playersHide}" id="players">
             <table class='table'>
@@ -113,6 +114,41 @@
                 <div v-show="playerError" class="alert alert-danger">Játékos nevének kitöltése kötelező!</div>
             </div>
         </div>
+
+        <!-- latest games -->
+        <div class="table-responsive games col-md-10 margin-auto" v-bind:class="{ dblock: gamesShow, dnone:gamesHide}">
+        	<table class="table">
+        		<thead>
+	                <tr>
+	                    <th>Game ID</th>
+	                    <th>Mentés időpontja</th>
+	                    <th>Bal oldal játokosok</th>	                   
+	                    <th>Jobb oldal játékosok</th>
+	                    <th>Eredmény</th>
+	                </tr>
+                </thead>
+                <tbody>
+                	<tr v-for="game in games" class="game-row">
+                		<td>{{game.game_id}}</td>
+                		<td>{{game.saved_at}}</td>
+                		<td>{{game.left.players}}</td>
+                		<td>{{game.right.players}}</td>
+                		<td>{{game.left.score}} : {{game.right.score}}</td>   
+                	</tr>
+                </tbody>
+        	</table>
+        </div>
+
+        <!-- kezdőképernyő, csocsó asztal -->
+        <div id="csocso-asztal" v-bind:class="{ dblock:showCurrentGame, dnone:hideCurrentGame}">
+        	<div id="kozzep-palya-vonal"></div>
+        	<div id="kozzep-palya-karika"></div>
+        	<div id="kozzep-palya-potty"></div>
+        	<div id="bal-eredmeny"><label>0</label></div>
+        	<div id="bal-jatekosok"><label id="left-player-1">Kriszti-</label><label id="left-player-2">Gergő</label></div>
+        	<div id="jobb-eredmeny"><label>0</label></div>
+        	<div id="jobb-jatekosok"><label id="right-player-1">Arnold-</label><label id="right-player-2">László</label></div>
+        </div>
     </div>
 </div>
 
@@ -128,7 +164,9 @@
      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
      crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script> 
 <script src="js/axios.js"></script>
+<script src="https://js.pusher.com/4.3/pusher.min.js"></script>
 <script src="js/csocso_app.js"></script>
 </body>
 </html>
