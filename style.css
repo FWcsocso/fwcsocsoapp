@@ -193,3 +193,91 @@
     font-size: 150px;
     margin-top: 10%;
 }
+
+#csocso-asztal {
+    width: 500px;
+    height: 300px;
+    margin: 0 auto;
+    border: solid 8px #5c472c;
+    background-color: #fbad51;
+    text-align:center;
+    position: relative;
+    margin-top: 120px;    
+}
+
+#csocso-asztal #kozzep-palya-vonal {
+    display: inline-block;
+    background-color: #fff;
+    width: 8px;
+    height: 284px;    
+}
+
+#csocso-asztal #kozzep-palya-karika {
+    width: 100px;
+    height: 100px;
+    border: solid 8px #fff;
+    display: inline-block;
+    background: transparent;
+    position: absolute;
+    -ms-transform: translate(-100px, -100px);
+    -webkit-transform: translate(-100px, -100px);
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+}
+
+#csocso-asztal #kozzep-palya-potty {
+    width: 20px;
+    height: 20px;    
+    display: inline-block;
+    background: #fff;
+    position: absolute;
+    -ms-transform: translate(-100px, -100px);
+    -webkit-transform: translate(-100px, -100px);
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+}
+
+#bal-eredmeny,
+#jobb-eredmeny {
+    position: absolute;
+    top: 50%;
+    color: #5c472c;
+    font-size: 75px;
+    -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+#bal-eredmeny {
+    left: 80px;
+}
+
+#jobb-eredmeny {
+    right: 35px;
+}
+
+#bal-jatekosok,
+#jobb-jatekosok {
+    position: absolute;
+    top: 65%;
+    font-size: 20px;
+    color: #5c472c;
+}
+
+#bal-jatekosok {
+    left: 25px;
+    display: flex;
+    justify-content: space-between;
+    width: 120px;
+}
+
+#jobb-jatekosok {
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 120px;
+}
