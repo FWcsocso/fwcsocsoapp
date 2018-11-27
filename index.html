@@ -26,10 +26,10 @@
             <ul>
                 <li v-if="loggedin" id="logout" @click="logout();">Kijelentkezés</li>
                 <li v-else onclick="$('#login-modal').modal();" id="login">Bejelentkezés</li>
-                <li v-show="loggedin" @click="currentGame();">Jelenlegi mérkőzés</li>
+                <li v-show="loggedin" @click="getCurrentGame();">Jelenlegi mérkőzés</li>
                 <li v-show="loggedin" @click="loadGames();">Mérkőzések</li>
                 <li v-show="loggedin" @click="loadAll();">Játékosok</li>
-                <li>Új mérkőzés</li>
+                <li v-show="loggedin" @click="startNewGame();">Új mérkőzés</li>
             </ul>
         </div>
         <!--modal-->
@@ -133,7 +133,7 @@
                 		<td>{{game.saved_at}}</td>
                 		<td>{{game.left.players}}</td>
                 		<td>{{game.right.players}}</td>
-                		<td>{{game.left.score}} : {{game.right.score}}</td>   
+                		<td>{{game.left.score}} : {{game.right.score}}</td>
                 	</tr>
                 </tbody>
         	</table>
@@ -141,13 +141,14 @@
 
         <!-- kezdőképernyő, csocsó asztal -->
         <div id="csocso-asztal" v-bind:class="{ dblock:showCurrentGame, dnone:hideCurrentGame}">
+            <button id="game-finish" @click="finishGame();">Játék vége</button>
         	<div id="kozzep-palya-vonal"></div>
         	<div id="kozzep-palya-karika"></div>
         	<div id="kozzep-palya-potty"></div>
-        	<div id="bal-eredmeny"><label>0</label></div>
-        	<div id="bal-jatekosok"><label id="left-player-1">Kriszti-</label><label id="left-player-2">Gergő</label></div>
-        	<div id="jobb-eredmeny"><label>0</label></div>
-        	<div id="jobb-jatekosok"><label id="right-player-1">Arnold-</label><label id="right-player-2">László</label></div>
+        	<div id="bal-eredmeny"><label>{{currentGame.left.score}}</label></div>
+        	<div id="bal-jatekosok"><label id="left-player-1"></label><span class="separator">-</span><label id="left-player-2"></label></div>
+        	<div id="jobb-eredmeny"><label>{{currentGame.right.score}}</label></div>
+        	<div id="jobb-jatekosok"><label id="right-player-1"></label><span class="separator">-</span><label id="right-player-2"></label></div>
         </div>
     </div>
 </div>
