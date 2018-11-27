@@ -1,28 +1,3 @@
-var x = new Date(1538397843).toDateString();
-
-console.log(x);
-
-let pusher = new Pusher('4ad6eb1f6c5815e676c4', {
-    cluster: 'eu',
-    encrypted: true,
-   /* app_id: '546789'*/
-});
-
-let channel = pusher.subscribe('csocso');
-
-channel.bind('game.updated', function (data) {
-    
-});
-
-channel.bind('game.ended', function (data) {
-    
-});
-
-channel.bind('game.started', function (data) {
-    
-});
-
-
 const base = axios.create({
     baseURL: 'https://csocso.online/api/'
 });
@@ -55,19 +30,58 @@ new Vue({
            hideCurrentGame: false,           
            players: [],
            games: [],
+           currentGame: {
+               game_id: "",
+               left: {
+                   players: "",
+                   score: ""
+               },
+               right: {
+                   players: "",
+                   score: ""
+               }
+           },
            playersInGame: []
        }
     },
     created () {        
         this.loading=false;
 
+        this.getCurrentGame();
+
         let token=window.localStorage.getItem("userToken");
         let tokenExpiration=window.localStorage.getItem("userTokenExpiration");
 
         if (token!=null) {
             this.loggedin=true;
-            this.token=token;            
+            this.token=token;
+            this.tokenExpiration=tokenExpiration;
         }
+
+        console.log(this.token);
+        console.log(this.tokenExpiration);
+
+        let pusher = new Pusher('4ad6eb1f6c5815e676c4', {
+            cluster: 'eu',
+            encrypted: true/*,
+            app_id: '546789'*/
+        });
+
+        let vueAppReference=this;
+        let channel = pusher.subscribe('csocso');
+
+        channel.bind('game.updated', function (data) {
+            vueAppReference.currentGame.left.score=data.left;
+            vueAppReference.currentGame.right.score=data.right;
+        });
+
+        channel.bind('game.ended', function (data) {
+
+        });
+
+        channel.bind('game.started', function (data) {
+
+        });
     },
     methods: {
         /*kijelentkezés*/
@@ -210,20 +224,10 @@ new Vue({
 
                     response.data.forEach(function (games) {                                            
                         if (games.left.players===null) games.left.players="-";                            
-                        if (games.right.players===null) games.right.players="-";                        
+                        if (games.right.players===null) games.right.players="-";
 
-                        const date = new Date(games.saved_at).toDateString();
-
-                        /*let year = d.getFullYear();
-                        let month=d.getMonth();
-                        let day=d.getDate();
-
-                        if (month<10) month="0"+month;                        
-                        if (day<10) day="0"+day;
-
-                        let myOwnDate=year+"."+month+"."+day+".";
-
-                        games.saved_at=myOwnDate;*/
+                        let date = new Date(games.saved_at * 1000);
+                        games.saved_at=date;
                     });
 
                     this.playersInGame=response.data;                     
@@ -247,7 +251,7 @@ new Vue({
                 });
         },*/
         /*"főképernyő", jelenlegi mérkőzés*/
-        currentGame() {            
+        getCurrentGame() {
             $(".menu").removeClass("menu-show");
             $(".menu-icon-wrapper").removeClass("menu-icon-wrapper-active");
             $(".menu").addClass("menu-hide");
@@ -257,7 +261,38 @@ new Vue({
             this.playersShow=false;
             this.playersHide=true;
             this.showCurrentGame=true;
-            this.hideCurrentGame=false;            
+            this.hideCurrentGame=false;
+
+            let loadUrl="game";
+            this.$http
+                .get(loadUrl)
+                .then(response => {
+                    this.currentGame=response.data;
+                });
+        },
+        startNewGame () {
+            //jelenlegi márkőzés lekérdezése
+            this.getCurrentGame();
+
+            //ha game_id üres
+            if (this.currentGame.game_id===null || this.currentGame==="") {
+                //indítható mérkőzés
+                console.log("indítható");
+            } else {
+                //jelezni, hogy van futó meccs
+                console.log("van futó meccs");
+            }
+
+        },
+        finishGame () {
+            let loadUrl="game/finish";
+            let headers = {"Authorization":  "Bearer " + this.token};
+
+            this.$http
+                .post(loadUrl,{headers:headers})
+                .then(response => {
+                    console.log(response.data);
+                });
         },
         hidePlayerAlert() {
             this.playerError=false;
