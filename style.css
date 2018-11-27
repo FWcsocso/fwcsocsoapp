@@ -2,7 +2,6 @@
     margin: 0;
     padding: 0;
 }
-
 #header {
     height: 60px;
     padding: 10px;
@@ -202,7 +201,7 @@
     background-color: #fbad51;
     text-align:center;
     position: relative;
-    margin-top: 120px;    
+    margin-top: 120px;
 }
 
 #csocso-asztal #kozzep-palya-vonal {
@@ -272,12 +271,41 @@
     left: 25px;
     display: flex;
     justify-content: space-between;
-    width: 120px;
 }
 
 #jobb-jatekosok {
     right: 20px;
     display: flex;
     justify-content: space-between;
-    width: 120px;
+}
+
+#left-player-1,
+#left-player-2,
+#right-player-1,
+#right-player-2 {
+    line-height: 50px;
+}
+
+#csocso-asztal #game-finish {
+    position: absolute;
+    top: -50px;
+    right:-8px;
+    background-color: #5c472c;
+    color: #ffffff;
+    border:none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: 500ms all;
+}
+
+#csocso-asztal #game-finish:hover {
+    background-color: #fbad51;
+    color: #5c472c;
+}
+
+span.separator {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 30px;
+    margin: 0 5px;
 }
